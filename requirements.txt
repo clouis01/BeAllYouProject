@@ -1,2 +1,5 @@
 streamlit
 openai
+scikit-learn
+genai
+google.generativeai
