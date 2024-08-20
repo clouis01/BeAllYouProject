@@ -6,22 +6,88 @@ from config import API_KEY  # Assuming API key is stored in config.py
 st.set_page_config(page_title='Orlo', page_icon='🦉')
 st.title('Orlo 🦉')
 
+# Custom CSS for the arrow and bouncing message
+st.markdown("""
+    <style>
+        /* Custom styling for the sidebar arrow animation */
+        [data-testid="collapsedControl"] {
+            animation: pulse 1.5s infinite;
+            border-radius: 50%;
+            border: 2px solid #FF4B4B;
+        }
+
+        /* Keyframes for pulse animation */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 75, 75, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 75, 75, 0);
+            }
+        }
+
+        /* Bouncing message */
+        .bouncing-message {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: #FF4B4B;
+            animation: bounce 2s infinite;
+        }
+
+        /* Keyframes for bounce animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# JavaScript to handle the sidebar message
+st.markdown("""
+    <script>
+        // Add the bouncing message to encourage users to open the sidebar
+        var messageDiv = document.createElement('div');
+        messageDiv.classList.add('bouncing-message');
+        messageDiv.innerHTML = '👈 Click here to open the sidebar!';
+        document.body.appendChild(messageDiv);
+
+        // Remove the message when the sidebar is opened
+        document.querySelector('[data-testid="collapsedControl"]').addEventListener('click', function() {
+            messageDiv.style.display = 'none';
+        });
+    </script>
+""", unsafe_allow_html=True)
+
 # Initialize Google Generative AI client globally
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 with st.expander('About this app'):
     st.markdown('**What can this app do?**')
-    st.info('This app allows users to create study plans to improve their test scores.')
+    st.info('Orlo is a study planning app designed to help users create customized study plans to improve their test scores.')
 
     st.markdown('**How to use the app?**')
-    st.warning('To engage with the app, go to the sidebar, input your study preferences, and click "Generate Study Plan".')
+    st.warning('To use Orlo, open the sidebar, enter your study preferences, and click "Generate Study Plan". The app will provide you with a detailed study plan based on the inputs you provide.')
 
-    st.markdown('**Under the hood**')
-    st.markdown('Data sets:')
-    st.code('- Drug solubility data set', language='markdown')
-    st.markdown('Libraries used:')
-    st.code('- Pandas, Scikit-learn, Altair, Streamlit', language='markdown')
+    st.markdown('**Behind the scenes**')
+    st.markdown('This app leverages the power of Google Generative AI to create study plans tailored to individual needs.')
+
+    st.markdown('**Key features include:**')
+    st.markdown('- **Customizable Study Plans:** Input your subject, study duration, and goals to get a plan that suits your needs.')
+    st.markdown('- **AI-Powered Recommendations:** Orlo uses Google’s generative AI to generate a study plan based on your preferences.')
+    st.markdown('- **Simple and Intuitive Interface:** Designed to be user-friendly and easy to navigate.')
 
 # Initialize session state for storing study plan and messages if not already initialized
 if "study_plan" not in st.session_state:
