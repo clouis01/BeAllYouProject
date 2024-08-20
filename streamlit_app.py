@@ -4,7 +4,22 @@ from config import API_KEY  # Assuming API key is stored in config.py
 
 # Page title
 st.set_page_config(page_title='Orlo', page_icon='🦉')
-st.title('Orlo 🦉')
+st.markdown("""
+    <style>
+        .centered-title {
+            text-align: center;
+        }
+        .tagline {
+            text-align: center;
+            font-size: 20px;
+            color: #gray; /* Change color as needed */
+            margin-top: -10px; /* Adjust spacing */
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown('<h1 class="centered-title">Orlo 🦉</h1>', unsafe_allow_html=True)
+st.markdown('<p class="tagline">Your everyday study bot companion</p>', unsafe_allow_html=True)
 
 # Custom CSS for the arrow and bouncing message
 st.markdown("""
