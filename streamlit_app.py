@@ -1,12 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
 from config import API_KEY  # Assuming API key is stored in config.py
-import pandas as pd
-import os
-import logging
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
 
 # Page title
 st.set_page_config(page_title='Orlo', page_icon='🦉')
@@ -166,44 +160,11 @@ if user_prompt:
     with st.chat_message("assistant"):
         st.markdown(response.text)
 
-# Feedback Form
-with st.expander('Feedback and Suggestions'):
-    with st.form(key='feedback_form'):
-        st.header('Feedback and Suggestions')
-        
-        # User input fields
-        name = st.text_input('Your Name (optional)')
-        email = st.text_input('Your Email (optional)')
-        message = st.text_area('Your Feedback/Suggestion')
-        
-        # Submit button
-        submit_button = st.form_submit_button(label="Submit")
-
-        if submit_button:
-            if message:
-                # Save feedback to CSV file
-                feedback_data = pd.DataFrame({
-                    'Name': [name],
-                    'Email': [email],
-                    'Message': [message]
-                })
-
-                # Create the 'data' directory if it does not exist
-                data_dir = 'data'
-                if not os.path.exists(data_dir):
-                    os.makedirs(data_dir)
-                
-                # Define the path for the feedback CSV file
-                feedback_file_path = os.path.join(data_dir, 'feedback.csv')
-
-                try:
-                    # Save feedback to CSV file
-                    with open(feedback_file_path, 'a') as f:
-                        feedback_data.to_csv(f, header=f.tell()==0, index=False)
-                    
-                    st.success('Thank you for your feedback!')
-                except Exception as e:
-                    st.error(f'Failed to save feedback: {e}')
-                    logging.error(f'Error saving feedback: {e}')  # Log error in the console
-            else:
-                st.error('Please enter your feedback before submitting.')
+# Feedback Link
+st.markdown("""
+    <h2>Feedback and Suggestions</h2>
+    <p>We value your feedback! Please share your suggestions and comments by filling out our feedback form:</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6Gy4kIaWvA0ly6B2QGfPZyv_nKyYg-xB6ePF63rdW1KZ5Rg/viewform?usp=sf_link" target="_blank">
+        <button>Give Feedback</button>
+    </a>
+""", unsafe_allow_html=True)
