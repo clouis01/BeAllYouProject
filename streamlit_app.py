@@ -1,6 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 from config import API_KEY  # Assuming API key is stored in config.py
+import pandas as pd
+import os
 
 # Page title
 st.set_page_config(page_title='Orlo', page_icon='🦉')
@@ -159,3 +161,36 @@ if user_prompt:
     st.session_state["messages"].append({"role": "assistant", "content": response.text})
     with st.chat_message("assistant"):
         st.markdown(response.text)
+
+# Feedback Form
+with st.expander('Feedback and Suggestions'):
+    with st.form(key='feedback_form'):
+        st.header('Feedback and Suggestions')
+        
+        # User input fields
+        name = st.text_input('Your Name (optional)')
+        email = st.text_input('Your Email (optional)')
+        message = st.text_area('Your Feedback/Suggestion')
+        
+        # Submit button
+        submit_button = st.form_submit_button(label="Submit")
+
+        if submit_button:
+            if message:
+                # Save feedback to CSV file
+                feedback_data = pd.DataFrame({
+                    'Name': [name],
+                    'Email': [email],
+                    'Message': [message]
+                })
+
+                # Create the 'data' directory if it does not exist
+                if not os.path.exists('data'):
+                    os.makedirs('data')
+                
+                # Save feedback to CSV file
+                feedback_data.to_csv('data/feedback.csv', mode='a', header=False, index=False)
+                
+                st.success('Thank you for your feedback!')
+            else:
+                st.error('Please enter your feedback before submitting.')
