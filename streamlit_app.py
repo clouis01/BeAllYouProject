@@ -3,6 +3,10 @@ import google.generativeai as genai
 from config import API_KEY  # Assuming API key is stored in config.py
 import pandas as pd
 import os
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 # Page title
 st.set_page_config(page_title='Orlo', page_icon='🦉')
@@ -185,12 +189,21 @@ with st.expander('Feedback and Suggestions'):
                 })
 
                 # Create the 'data' directory if it does not exist
-                if not os.path.exists('data'):
-                    os.makedirs('data')
+                data_dir = 'data'
+                if not os.path.exists(data_dir):
+                    os.makedirs(data_dir)
                 
-                # Save feedback to CSV file
-                feedback_data.to_csv('data/feedback.csv', mode='a', header=False, index=False)
-                
-                st.success('Thank you for your feedback!')
+                # Define the path for the feedback CSV file
+                feedback_file_path = os.path.join(data_dir, 'feedback.csv')
+
+                try:
+                    # Save feedback to CSV file
+                    with open(feedback_file_path, 'a') as f:
+                        feedback_data.to_csv(f, header=f.tell()==0, index=False)
+                    
+                    st.success('Thank you for your feedback!')
+                except Exception as e:
+                    st.error(f'Failed to save feedback: {e}')
+                    logging.error(f'Error saving feedback: {e}')  # Log error in the console
             else:
                 st.error('Please enter your feedback before submitting.')
