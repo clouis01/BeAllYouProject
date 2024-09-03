@@ -160,11 +160,15 @@ if user_prompt:
     with st.chat_message("assistant"):
         st.markdown(response.text)
 
-# Feedback Link
+# Feedback Button
+feedback_url = "https://docs.google.com/forms/d/e/1FAIpQLSf6Gy4kIaWvA0ly6B2QGfPZyv_nKyYg-xB6ePF63rdW1KZ5Rg/viewform?usp=sf_link"
+
 st.markdown("""
     <h2>Feedback and Suggestions</h2>
     <p>We value your feedback! Please share your suggestions and comments by filling out our feedback form:</p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6Gy4kIaWvA0ly6B2QGfPZyv_nKyYg-xB6ePF63rdW1KZ5Rg/viewform?usp=sf_link" target="_blank">
-        <button>Give Feedback</button>
-    </a>
 """, unsafe_allow_html=True)
+
+if st.button('Give Feedback'):
+    # Open the feedback form in a new tab
+    js = f"window.open('{feedback_url}', '_blank')"
+    st.components.v1.html(f"<script>{js}</script>", height=0)
